@@ -6,6 +6,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { useState } from "react";
+import { RoleProvider } from "./RoleProvider";
 
 export function Providers({ children }: { children: React.ReactNode }) {
     const [queryClient] = useState(() => new QueryClient());
@@ -13,11 +14,13 @@ export function Providers({ children }: { children: React.ReactNode }) {
     return (
         <QueryClientProvider client={queryClient}>
             <ThemeProvider attribute="class" defaultTheme="dark" enableSystem disableTransitionOnChange>
-                <TooltipProvider>
-                    {children}
-                    <Toaster />
-                    <Sonner />
-                </TooltipProvider>
+                <RoleProvider>
+                    <TooltipProvider>
+                        {children}
+                        <Toaster />
+                        <Sonner />
+                    </TooltipProvider>
+                </RoleProvider>
             </ThemeProvider>
         </QueryClientProvider>
     );

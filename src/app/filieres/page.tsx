@@ -1,12 +1,20 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { GraduationCap, Search, Plus, Users, BookOpen } from "lucide-react";
+import { GraduationCap, Search, Plus, Users, BookOpen, Calculator, Trash2, Edit2, CheckCircle2 } from "lucide-react";
 import { useState } from "react";
 import DashboardLayout from "@/components/DashboardLayout";
+import { useRole } from "@/components/RoleProvider";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import {
+    Sheet,
+    SheetContent,
+    SheetDescription,
+    SheetHeader,
+    SheetTitle,
+} from "@/components/ui/sheet";
 
 // Mock Data for "Filières"
 const filieresData = [
@@ -16,13 +24,27 @@ const filieresData = [
     { id: 4, name: "Classe Préparatoire Intégrée", code: "CP", level: "Classes Préparatoires", students: 450, activeCourses: 12 },
 ];
 
+const mockCurriculum = [
+    { id: 1, code: "CS301", name: "Machine Learning Avancé", credits: 6, hetd: 45 },
+    { id: 2, code: "CS302", name: "Deep Learning & Vision", credits: 5, hetd: 40 },
+    { id: 3, code: "CS303", name: "Big Data Architecture", credits: 5, hetd: 42 },
+    { id: 4, code: "MGT301", name: "Management de l'Innovation", credits: 4, hetd: 30 },
+];
+
 export default function Filieres() {
+    const { currentRole } = useRole();
+    const isProfessor = currentRole === "Professeur";
     const [search, setSearch] = useState("");
+    const [selectedFiliere, setSelectedFiliere] = useState<any>(null);
+    const [curriculum, setCurriculum] = useState(mockCurriculum);
 
     const filtered = filieresData.filter((f) =>
         f.name.toLowerCase().includes(search.toLowerCase()) ||
         f.code.toLowerCase().includes(search.toLowerCase())
     );
+
+    const totalCredits = curriculum.reduce((acc, curr) => acc + curr.credits, 0);
+    const totalHetd = curriculum.reduce((acc, curr) => acc + curr.hetd, 0);
 
     return (
         <DashboardLayout>
@@ -44,10 +66,12 @@ export default function Filieres() {
                                 onChange={(e) => setSearch(e.target.value)}
                             />
                         </div>
-                        <Button className="bg-primary text-primary-foreground hover:bg-primary/90 h-9 px-3">
-                            <Plus className="h-4 w-4 sm:mr-2" />
-                            <span className="hidden sm:inline">Nouvelle Filière</span>
-                        </Button>
+                        {!isProfessor && (
+                            <Button className="bg-primary text-primary-foreground hover:bg-primary/90 h-9 px-3">
+                                <Plus className="h-4 w-4 sm:mr-2" />
+                                <span className="hidden sm:inline">Nouvelle Filière</span>
+                            </Button>
+                        )}
                     </div>
                 </div>
 
@@ -65,7 +89,7 @@ export default function Filieres() {
                                 <div className="h-12 w-12 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
                                     <span className="text-primary font-bold text-lg">{filiere.code}</span>
                                 </div>
-                                <Badge variant="outline" className="bg-secondary text-xs">
+                                <Badge variant="outline" className="bg-secondary text-xs border-border">
                                     {filiere.level}
                                 </Badge>
                             </div>
@@ -90,12 +114,125 @@ export default function Filieres() {
                                 </div>
                             </div>
 
-                            <Button variant="outline" className="w-full mt-6 border-border hover:bg-secondary">
-                                Gérer le Curriculum
+                            <Button
+                                variant="outline"
+                                className="w-full mt-6 border-border hover:bg-secondary"
+                                onClick={() => setSelectedFiliere(filiere)}
+                            >
+                                {isProfessor ? "Voir le Programme" : "Gérer le Programme"}
                             </Button>
                         </motion.div>
                     ))}
                 </div>
+
+                {/* Curriculum Builder Slide-out Panel */}
+                <Sheet open={!!selectedFiliere} onOpenChange={(open) => !open && setSelectedFiliere(null)}>
+                    <SheetContent className="w-full sm:max-w-2xl overflow-y-auto border-l border-border bg-card">
+                        <SheetHeader className="mb-6">
+                            <SheetTitle className="text-xl font-bold flex items-center gap-2">
+                                <Calculator className="h-5 w-5 text-primary" /> Constructeur de Maquette Pédagogique
+                            </SheetTitle>
+                            <SheetDescription>
+                                Définissez les matières, les volumes horaires et les crédits ECTS pour la filière {selectedFiliere?.name}.
+                            </SheetDescription>
+                        </SheetHeader>
+
+                        <div className="space-y-6">
+                            {/* Global Stats Calculation */}
+                            <div className="grid grid-cols-2 gap-4">
+                                <div className="p-4 rounded-xl border border-border bg-secondary/20 flex flex-col items-center justify-center text-center">
+                                    <p className="text-xs text-muted-foreground uppercase tracking-wider mb-1">Total ECTS</p>
+                                    <div className="text-3xl font-bold text-primary flex items-center gap-2">
+                                        {totalCredits} <span className="text-sm font-normal text-muted-foreground">/ 30</span>
+                                    </div>
+                                    {totalCredits < 30 ? (
+                                        <Badge variant="outline" className="mt-2 bg-destructive/10 text-destructive border-destructive/20 text-[10px]">Incomplet</Badge>
+                                    ) : (
+                                        <Badge variant="outline" className="mt-2 bg-success/10 text-success border-success/30 text-[10px]">Conforme</Badge>
+                                    )}
+                                </div>
+                                <div className="p-4 rounded-xl border border-border bg-secondary/20 flex flex-col items-center justify-center text-center">
+                                    <p className="text-xs text-muted-foreground uppercase tracking-wider mb-1">Total HETD</p>
+                                    <div className="text-3xl font-bold text-accent">
+                                        {totalHetd}h
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Semester Selection */}
+                            <div className="flex gap-2 p-1 bg-secondary rounded-lg">
+                                <Button className="flex-1 bg-background text-foreground shadow-sm">Semestre 5</Button>
+                                <Button variant="ghost" className="flex-1 text-muted-foreground">Semestre 6</Button>
+                            </div>
+
+                            {/* Curriculum Table */}
+                            <div>
+                                <div className="flex items-center justify-between mb-4">
+                                    <h4 className="font-semibold text-foreground">Matières du Semestre</h4>
+                                    {!isProfessor && (
+                                        <Button size="sm" className="gap-2 bg-primary text-primary-foreground h-8">
+                                            <Plus className="h-4 w-4" /> Ajouter Matière
+                                        </Button>
+                                    )}
+                                </div>
+
+                                <div className="border border-border rounded-xl overflow-hidden">
+                                    <table className="w-full text-sm text-left">
+                                        <thead className="bg-secondary/50 text-xs text-muted-foreground border-b border-border">
+                                            <tr>
+                                                <th className="px-4 py-3 font-medium">Code</th>
+                                                <th className="px-4 py-3 font-medium">Matière</th>
+                                                <th className="px-4 py-3 font-medium text-center">ECTS</th>
+                                                <th className="px-4 py-3 font-medium text-center">HETD</th>
+                                                {!isProfessor && <th className="px-4 py-3 text-right">Actions</th>}
+                                            </tr>
+                                        </thead>
+                                        <tbody className="divide-y divide-border">
+                                            {curriculum.map((mat) => (
+                                                <tr key={mat.id} className="hover:bg-secondary/30 transition-colors">
+                                                    <td className="px-4 py-3 font-mono text-xs">{mat.code}</td>
+                                                    <td className="px-4 py-3 font-medium">{mat.name}</td>
+                                                    <td className="px-4 py-3 text-center">
+                                                        <Badge variant="secondary" className="bg-background">{mat.credits}</Badge>
+                                                    </td>
+                                                    <td className="px-4 py-3 text-center text-muted-foreground">{mat.hetd}h</td>
+                                                    {!isProfessor && (
+                                                        <td className="px-4 py-3 text-right">
+                                                            <div className="flex justify-end gap-1">
+                                                                <Button variant="ghost" size="icon" className="h-7 w-7 text-muted-foreground hover:text-primary">
+                                                                    <Edit2 className="h-3.5 w-3.5" />
+                                                                </Button>
+                                                                <Button variant="ghost" size="icon" className="h-7 w-7 text-muted-foreground hover:text-destructive"
+                                                                    onClick={() => setCurriculum(curriculum.filter(c => c.id !== mat.id))}
+                                                                >
+                                                                    <Trash2 className="h-3.5 w-3.5" />
+                                                                </Button>
+                                                            </div>
+                                                        </td>
+                                                    )}
+                                                </tr>
+                                            ))}
+                                            {curriculum.length === 0 && (
+                                                <tr>
+                                                    <td colSpan={isProfessor ? 4 : 5} className="py-8 text-center text-muted-foreground">Aucune matière affectée.</td>
+                                                </tr>
+                                            )}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <div className="pt-6 border-t border-border flex justify-end gap-3">
+                                <Button variant="outline" onClick={() => setSelectedFiliere(null)}>Fermer</Button>
+                                {!isProfessor && (
+                                    <Button className="bg-primary text-primary-foreground gap-2">
+                                        <CheckCircle2 className="h-4 w-4" /> Sauvegarder la Maquette
+                                    </Button>
+                                )}
+                            </div>
+                        </div>
+                    </SheetContent>
+                </Sheet>
             </div>
         </DashboardLayout>
     );

@@ -1,11 +1,12 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { motion } from "framer-motion";
-import { Calendar, AlertTriangle, Sparkles, Filter, Clock, MapPin, User } from "lucide-react";
+import { Calendar, AlertTriangle, Sparkles, Filter, Clock, MapPin, User, Lock } from "lucide-react";
 import DashboardLayout from "@/components/DashboardLayout";
+import { useRole } from "@/components/RoleProvider";
 import { scheduleData, professors } from "@/data/mockData";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
@@ -19,6 +20,8 @@ const typeColors: Record<string, string> = {
 };
 
 export default function Schedule() {
+  const { currentRole } = useRole();
+  const isProfessor = currentRole === "Professeur";
   const [filterProf, setFilterProf] = useState("all");
   const [optimizing, setOptimizing] = useState(false);
   const [optimized, setOptimized] = useState(false);
@@ -46,9 +49,11 @@ export default function Schedule() {
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
             <h1 className="text-2xl font-bold text-foreground flex items-center gap-2">
-              <Calendar className="h-6 w-6 text-primary" /> Emploi du Temps Intelligent
+              <Calendar className="h-6 w-6 text-primary" /> Emploi du Temps {isProfessor ? "" : "Intelligent"}
             </h1>
-            <p className="text-sm text-muted-foreground mt-1">Gestion optimisée par l'IA</p>
+            <p className="text-sm text-muted-foreground mt-1">
+              {isProfessor ? "Consultez le planning global ou filtrez par collègue" : "Gestion optimisée par l'IA"}
+            </p>
           </div>
           <div className="flex items-center gap-3">
             <Select value={filterProf} onValueChange={setFilterProf}>
@@ -65,19 +70,35 @@ export default function Schedule() {
                 ))}
               </SelectContent>
             </Select>
-            <Button
-              onClick={handleOptimize}
-              disabled={optimizing}
-              className="bg-primary text-primary-foreground hover:bg-primary/90 gap-2 h-9 text-sm"
-            >
-              <Sparkles className="h-3.5 w-3.5" />
-              {optimizing ? "Optimisation..." : "Optimiser via l'IA"}
-            </Button>
+            {!isProfessor && (
+              <>
+                <Button
+                  onClick={handleOptimize}
+                  disabled={optimizing}
+                  className="bg-primary text-primary-foreground hover:bg-primary/90 gap-2 h-9 text-sm"
+                >
+                  <Sparkles className="h-3.5 w-3.5" />
+                  {optimizing ? "Optimisation..." : "Optimiser via l'IA"}
+                </Button>
+                <Link href="/schedule/builder">
+                  <Button variant="outline" className="h-9 text-sm border-border bg-secondary hover:bg-secondary/80 gap-2">
+                    <Calendar className="h-3.5 w-3.5 text-muted-foreground" />
+                    Éditeur Visuel
+                  </Button>
+                </Link>
+              </>
+            )}
+            {isProfessor && (
+              <Button disabled variant="outline" className="h-9 text-sm border-border/50 bg-secondary/50 gap-2">
+                <Lock className="h-3.5 w-3.5 text-muted-foreground" />
+                Lecture Seule
+              </Button>
+            )}
           </div>
         </div>
 
         {/* Conflict alerts */}
-        {conflicts.length > 0 && !optimized && (
+        {conflicts.length > 0 && !optimized && !isProfessor && (
           <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="bg-destructive/10 border border-destructive/20 rounded-2xl p-4 flex items-start gap-3">
             <AlertTriangle className="h-5 w-5 text-destructive flex-shrink-0 mt-0.5" />
             <div>
@@ -183,7 +204,7 @@ export default function Schedule() {
             <p className="text-2xl font-bold text-foreground font-mono">{new Set(scheduleData.map((s) => s.room)).size}</p>
           </motion.div>
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 }} className="bg-card border border-border rounded-2xl p-4">
-            <p className="text-xs text-muted-foreground mb-1">Taux d'Utilisation</p>
+            <p className="text-xs text-muted-foreground mb-1">Taux d&apos;Utilisation</p>
             <p className="text-2xl font-bold gradient-text font-mono">{optimized ? "94%" : "78%"}</p>
           </motion.div>
         </div>

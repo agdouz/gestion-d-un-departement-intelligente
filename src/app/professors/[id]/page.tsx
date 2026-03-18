@@ -3,13 +3,14 @@
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { ArrowLeft, Mail, Clock, Award, AlertTriangle, BookOpen, Lightbulb, Phone, MapPin, Download, GraduationCap, FileText, Users, Star, RotateCcw, Video, File, ExternalLink } from "lucide-react";
+import { ArrowLeft, Mail, Clock, Award, AlertTriangle, BookOpen, Lightbulb, Phone, MapPin, Download, GraduationCap, FileText, Users, Star, RotateCcw, Video, File, ExternalLink, Activity, Percent, Sparkles } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
 import DashboardLayout from "@/components/DashboardLayout";
 import { professors } from "@/data/mockData";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { useRole } from "@/components/RoleProvider";
 import jsPDF from "jspdf";
 
 const weeklyBreakdown = [
@@ -129,6 +130,8 @@ function generatePDF(prof: typeof professors[0]) {
 
 export default function ProfessorProfile() {
   const { id } = useParams();
+  const { currentRole } = useRole();
+  const isAdminOrSuperAdmin = currentRole === "Super Admin" || currentRole === "Admin Dept";
   const prof = professors.find((p) => p.id === id);
 
   if (!prof) {
@@ -172,7 +175,7 @@ export default function ProfessorProfile() {
               </div>
               <div className="flex flex-wrap gap-4 mt-2 text-sm text-muted-foreground">
                 <span className="flex items-center gap-1"><Clock className="h-3.5 w-3.5" />{prof.weeklyHours}h/semaine</span>
-                <span className="flex items-center gap-1"><Award className="h-3.5 w-3.5" />{prof.yearsOfService} ans d'ancienneté</span>
+                <span className="flex items-center gap-1"><Award className="h-3.5 w-3.5" />{prof.yearsOfService} ans d&apos;ancienneté</span>
                 <span className="flex items-center gap-1"><FileText className="h-3.5 w-3.5" />{prof.publications} publications</span>
                 <span className="flex items-center gap-1"><Users className="h-3.5 w-3.5" />{prof.totalStudents} étudiants</span>
                 <span className="flex items-center gap-1"><RotateCcw className="h-3.5 w-3.5 text-destructive" />{prof.rattrapageRate}% en rattrapage</span>
@@ -281,6 +284,81 @@ export default function ProfessorProfile() {
             </div>
           </div>
         </motion.div>
+
+        {/* Pedagogical Performance (Admin Only) */}
+        {isAdminOrSuperAdmin && prof.evaluations && (
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.28 }} className="bg-card border border-border rounded-2xl p-6">
+            <div className="flex items-center justify-between mb-6">
+              <div>
+                <h3 className="text-lg font-bold text-foreground flex items-center gap-2">
+                  <Activity className="h-5 w-5 text-primary" /> Performances Pédagogiques
+                </h3>
+                <p className="text-sm text-muted-foreground mt-1">Vue administrateur des évaluations étudiantes et de l&apos;analyse IA.</p>
+              </div>
+              <div className="text-right">
+                <div className="text-2xl font-bold font-mono text-success flex items-center justify-end gap-1">
+                  {prof.passRate} <Percent className="h-4 w-4" />
+                </div>
+                <p className="text-xs text-muted-foreground mt-1">Taux de réussite global</p>
+              </div>
+            </div>
+
+            <div className="grid md:grid-cols-2 gap-6">
+              <div className="space-y-4">
+                <h4 className="text-sm font-semibold text-foreground flex items-center gap-2">
+                  <Star className="h-4 w-4 text-warning fill-warning" /> Notes des Étudiants
+                </h4>
+                {[
+                  { label: "Clarté des explications", value: prof.evaluations.clarity },
+                  { label: "Engagement & Dynamisme", value: prof.evaluations.engagement },
+                  { label: "Disponibilité & Soutien", value: prof.evaluations.support },
+                  { label: "Qualité des supports", value: prof.evaluations.materials },
+                ].map((item, i) => (
+                  <div key={i} className="space-y-1.5">
+                    <div className="flex justify-between text-xs">
+                      <span className="text-muted-foreground">{item.label}</span>
+                      <span className="font-semibold">{item.value}/5.0</span>
+                    </div>
+                    <div className="w-full h-1.5 bg-secondary rounded-full overflow-hidden">
+                      <div className="h-full rounded-full bg-warning" style={{ width: `${(item.value / 5) * 100}%` }} />
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <div className="bg-primary/5 border border-primary/20 rounded-xl p-4">
+                <h4 className="text-sm font-semibold text-foreground mb-3 flex items-center gap-2">
+                  <Sparkles className="h-4 w-4 text-primary" /> Synthèse IA
+                </h4>
+                <p className="text-sm text-foreground leading-relaxed mb-4">
+                  {prof.aiFeedback.summary}
+                </p>
+                <div className="space-y-3">
+                  <div>
+                    <span className="text-xs font-semibold text-success uppercase tracking-wider">Points Forts</span>
+                    <ul className="mt-1 space-y-1">
+                      {prof.aiFeedback.strengths.slice(0, 2).map((s, i) => (
+                        <li key={i} className="text-xs text-muted-foreground flex items-start gap-1.5 truncate">
+                          <span className="text-success mt-0.5">•</span> {s}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                  <div>
+                    <span className="text-xs font-semibold text-accent uppercase tracking-wider">À surveiller</span>
+                    <ul className="mt-1 space-y-1">
+                      {prof.aiFeedback.improvements.slice(0, 2).map((s, i) => (
+                        <li key={i} className="text-xs text-muted-foreground flex items-start gap-1.5 truncate">
+                          <span className="text-accent mt-0.5">•</span> {s}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        )}
 
         {/* Supports de cours (PDFs & Videos) */}
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="bg-card border border-border rounded-2xl p-5 mb-8">

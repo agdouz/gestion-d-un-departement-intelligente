@@ -9,8 +9,6 @@ import {
   Users,
   Calendar,
   Brain,
-  Lightbulb,
-  FlaskConical,
   Settings,
   Search,
   Bell,
@@ -19,27 +17,41 @@ import {
   Sparkles,
   BookMarked,
   GraduationCap,
-  UserCircle
+  UserCircle,
+  Shield,
+  Building2,
+  Layers
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { useRole } from "./RoleProvider";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
-const navItems = [
-  { label: "Tableau de Bord", icon: LayoutDashboard, path: "/dashboard" },
-  { label: "Professeurs", icon: Users, path: "/professors" },
-  { label: "Matières", icon: BookMarked, path: "/matieres" },
-  { label: "Filières", icon: GraduationCap, path: "/filieres" },
-  { label: "Emploi du temps", icon: Calendar, path: "/schedule" },
-  { label: "Module IA", icon: Brain, path: "/insights" },
-  { label: "Mon Espace", icon: UserCircle, path: "/espace-perso" },
-  { label: "Administration", icon: Settings, path: "/dashboard" },
+const allNavItems = [
+  { label: "Tableau de Bord", icon: LayoutDashboard, path: "/dashboard", roles: ["Super Admin", "Admin Dept"] },
+  { label: "Professeurs", icon: Users, path: "/professors", roles: ["Super Admin", "Admin Dept", "Professeur"] },
+  { label: "Matières", icon: BookMarked, path: "/matieres", roles: ["Super Admin", "Admin Dept"] },
+  { label: "Filières", icon: GraduationCap, path: "/filieres", roles: ["Super Admin", "Admin Dept", "Professeur"] },
+  { label: "Emploi du temps", icon: Calendar, path: "/schedule", roles: ["Super Admin", "Admin Dept", "Professeur"] },
+  { label: "Semestres", icon: Layers, path: "/semesters", roles: ["Super Admin", "Admin Dept"] },
+  { label: "Module IA", icon: Brain, path: "/insights", roles: ["Super Admin", "Admin Dept"] },
+  { label: "Mon Espace", icon: UserCircle, path: "/espace-perso", roles: ["Professeur"] },
+  { label: "Administration", icon: Settings, path: "/dashboard/users", roles: ["Super Admin"] },
 ];
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const { currentRole, setCurrentRole } = useRole();
   const pathname = usePathname();
 
   const NavContent = () => (
@@ -56,37 +68,43 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       </Link>
 
       <nav className="flex-1 px-2 py-4 space-y-1">
-        {navItems.map((item) => {
-          const isActive = pathname === item.path;
-          return (
-            <Link
-              key={item.label}
-              href={item.path}
-              onClick={() => setMobileOpen(false)}
-              className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-all duration-200 group ${isActive
-                ? "bg-primary/10 text-primary"
-                : "text-muted-foreground hover:text-foreground hover:bg-secondary"
-                }`}
-            >
-              <item.icon className={`h-4 w-4 flex-shrink-0 ${isActive ? "text-primary" : ""}`} />
-              {sidebarOpen && <span>{item.label}</span>}
-              {isActive && sidebarOpen && (
-                <div className="ml-auto h-1.5 w-1.5 rounded-full bg-primary animate-pulse-glow" />
-              )}
-            </Link>
-          );
-        })}
+        {allNavItems
+          .filter(item => item.roles.includes(currentRole))
+          .map((item) => {
+            const isActive = pathname === item.path;
+            return (
+              <Link
+                key={item.label}
+                href={item.path}
+                onClick={() => setMobileOpen(false)}
+                className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-all duration-200 group ${isActive
+                  ? "bg-primary/10 text-primary"
+                  : "text-muted-foreground hover:text-foreground hover:bg-secondary"
+                  }`}
+              >
+                <item.icon className={`h-4 w-4 flex-shrink-0 ${isActive ? "text-primary" : ""}`} />
+                {sidebarOpen && <span>{item.label}</span>}
+                {isActive && sidebarOpen && (
+                  <div className="ml-auto h-1.5 w-1.5 rounded-full bg-primary animate-pulse-glow" />
+                )}
+              </Link>
+            );
+          })}
       </nav>
 
       <div className="p-4 border-t border-border">
         <div className="flex items-center gap-3">
           <Avatar className="h-8 w-8">
-            <AvatarFallback className="bg-primary/20 text-primary text-xs">AD</AvatarFallback>
+            <AvatarFallback className="bg-primary/20 text-primary text-xs">
+              {currentRole === "Professeur" ? "PR" : currentRole === "Admin Dept" ? "AD" : "SA"}
+            </AvatarFallback>
           </Avatar>
           {sidebarOpen && (
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium text-foreground truncate">Admin</p>
-              <p className="text-xs text-muted-foreground truncate">admin@uni.edu</p>
+              <p className="text-sm font-medium text-foreground truncate">{currentRole}</p>
+              <p className="text-xs text-muted-foreground truncate">
+                {currentRole === "Professeur" ? "dr.chen@emsi.ma" : "admin@emsi.ma"}
+              </p>
             </div>
           )}
         </div>
@@ -95,7 +113,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   );
 
   return (
-    <div className="min-h-screen flex bg-background">
+    <div className="min-h-screen flex bg-transparent">
       {/* Desktop Sidebar */}
       <aside
         className={`hidden lg:flex flex-col border-r border-border bg-sidebar transition-all duration-300 ${sidebarOpen ? "w-60" : "w-16"
@@ -160,13 +178,42 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
           <div className="flex items-center gap-2">
             <ThemeToggle />
-            <Button variant="ghost" size="icon" className="relative">
+            <Button variant="ghost" size="icon" className="relative hidden sm:flex">
               <Bell className="h-4 w-4" />
               <span className="absolute top-1.5 right-1.5 h-2 w-2 rounded-full bg-primary animate-pulse-glow" />
             </Button>
-            <Avatar className="h-8 w-8">
-              <AvatarFallback className="bg-primary/20 text-primary text-xs">AD</AvatarFallback>
-            </Avatar>
+
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" className="gap-2 border-border ml-2">
+                  <span className="text-xs font-semibold">{currentRole}</span>
+                  <Avatar className="h-6 w-6">
+                    <AvatarFallback className="bg-primary/20 text-primary text-[10px]">
+                      {currentRole === "Professeur" ? "PR" : currentRole === "Admin Dept" ? "AD" : "SA"}
+                    </AvatarFallback>
+                  </Avatar>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-48">
+                <DropdownMenuLabel>Simulation de Rôle</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={() => setCurrentRole("Super Admin")}>
+                  <Shield className="mr-2 h-4 w-4 text-primary" /> Super Admin
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setCurrentRole("Admin Dept")}>
+                  <Building2 className="mr-2 h-4 w-4 text-accent" /> Admin Dept
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setCurrentRole("Professeur")}>
+                  <GraduationCap className="mr-2 h-4 w-4 text-success" /> Professeur
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem asChild>
+                  <Link href="/auth">
+                    <UserCircle className="mr-2 h-4 w-4 text-muted-foreground" /> Se déconnecter
+                  </Link>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         </header>
 

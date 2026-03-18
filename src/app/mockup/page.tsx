@@ -9,6 +9,7 @@ import Insights from "@/app/insights/page";
 import Matieres from "@/app/matieres/page";
 import Filieres from "@/app/filieres/page";
 import EspacePerso from "@/app/espace-perso/page";
+import AuthPage from "@/app/auth/page";
 
 function Artboard({ children, title }: { children: React.ReactNode; title: string }) {
     return (
@@ -72,6 +73,10 @@ export default function MockupBoard() {
 
                 <Artboard title="09. Espace Personnel (CV)">
                     <EspacePerso />
+                </Artboard>
+
+                <Artboard title="10. Authentification (Roles)">
+                    <AuthPage />
                 </Artboard>
             </div>
         </div>

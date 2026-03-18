@@ -2,30 +2,14 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { ArrowRight, Sparkles, Brain, BarChart3, Shield, Calendar, Users, Zap, CheckCircle2, Star } from "lucide-react";
+import { ArrowRight, Sparkles, Brain, BarChart3, Calendar, CheckCircle2, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import heroBg from "@/assets/academic-hero.png";
 import landingDashboard from "@/assets/academic-dashboard.png";
 import landingAi from "@/assets/academic-lab.png";
 import landingSchedule from "@/assets/academic-schedule.png";
 import customLogo from "@/assets/smart-knowledge-logo.png";
 import { ThemeToggle } from "@/components/ThemeToggle";
-
-const features = [
-  { icon: Brain, title: "Analyses de l'IA", desc: "Des modèles d'apprentissage profond analysent la charge de travail, les performances et les facteurs de risque." },
-  { icon: BarChart3, title: "Planification Intelligente", desc: "Distribution optimisée des cours maximisant l'efficacité des professeurs et des étudiants." },
-  { icon: Shield, title: "Prédiction des Risques", desc: "Détection précoce des épuisements, de la baisse de performance et des goulots d'étranglement." },
-  { icon: Calendar, title: "Emploi du temps IA", desc: "Génération automatique d'emploi du temps éliminant les conflits et optimisant l'allocation des salles." },
-  { icon: Users, title: "Gestion du Corps Professoral", desc: "Profils complets des professeurs avec CV, publications et suivi des performances." },
-  { icon: Zap, title: "Laboratoire de Simulation", desc: "Testez des scénarios hypothétiques avant d'apporter des changements à votre département." },
-];
-
-const stats = [
-  { value: "98%", label: "Optimisation de l'Emploi du temps" },
-  { value: "40%", label: "Réduction des Conflits" },
-  { value: "8+", label: "Modèles IA Actifs" },
-  { value: "24/7", label: "Surveillance en Temps Réel" },
-];
+import ScrollFrameCanvas from "@/components/ScrollFrameCanvas";
 
 const howItWorks = [
   { step: "01", title: "Connectez vos Données", desc: "Importez les profils, les cours et les emplois du temps dans la plateforme." },
@@ -48,124 +32,53 @@ const fadeUp = {
 
 export default function Landing() {
   return (
-    <div className="min-h-screen bg-background relative overflow-hidden">
-      {/* Grid pattern overlay */}
-      <div className="absolute inset-0 bg-[linear-gradient(hsl(var(--primary)/0.03)_1px,transparent_1px),linear-gradient(90deg,hsl(var(--primary)/0.03)_1px,transparent_1px)] bg-[size:60px_60px]" />
-
-      {/* Glow orbs */}
-      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/5 rounded-full blur-3xl" />
-      <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-accent/5 rounded-full blur-3xl" />
-
-      {/* Navbar */}
-      <header className="relative z-10 flex items-center justify-between px-6 lg:px-12 py-4">
+    <div className="min-h-screen bg-transparent relative">
+      {/* Fixed Navbar — always on top of the scroll animation */}
+      <header className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 lg:px-12 py-4 backdrop-blur-md bg-black/20">
         <div className="flex items-center gap-3">
-          <div className="h-10 w-10 rounded-lg flex items-center justify-center overflow-hidden bg-white">
+          <div className="h-10 w-10 rounded-lg flex items-center justify-center overflow-hidden bg-white shadow-md">
             <img src={customLogo.src} alt="Smart Knowledge Logo" className="h-full w-full object-cover" />
           </div>
-          <div className="hidden sm:block h-6 w-px bg-border"></div>
-          <span className="font-semibold text-foreground tracking-tight hidden sm:block">Smart Knowledge</span>
+          <div className="hidden sm:block h-6 w-px bg-white/30"></div>
+          <span className="font-semibold text-white tracking-tight hidden sm:block drop-shadow-md">Smart Knowledge</span>
         </div>
-        <nav className="hidden md:flex items-center gap-6 text-sm text-muted-foreground">
-          <a href="#features" className="hover:text-foreground transition-colors">Fonctionnalités</a>
-          <a href="#how-it-works" className="hover:text-foreground transition-colors">Comment ça marche</a>
-          <a href="#testimonials" className="hover:text-foreground transition-colors">Témoignages</a>
+        <nav className="hidden md:flex items-center gap-6 text-sm text-gray-100 font-medium drop-shadow-md">
+          <a href="#how-it-works" className="hover:text-white transition-colors">Comment ça marche</a>
+          <a href="#showcase" className="hover:text-white transition-colors">Fonctionnalités</a>
+          <a href="#testimonials" className="hover:text-white transition-colors">Témoignages</a>
         </nav>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 drop-shadow-md text-white">
           <ThemeToggle />
-          <Link href="/dashboard">
-            <Button variant="outline" size="sm" className="hidden sm:inline-flex border-border text-foreground hover:bg-secondary">
-              Accéder au tableau de bord
+          <Link href="/auth">
+            <Button variant="outline" size="sm" className="hidden sm:inline-flex border-white/50 bg-white/10 text-white hover:bg-white/20 backdrop-blur-sm">
+              Se connecter
             </Button>
           </Link>
         </div>
       </header>
 
-      {/* Hero */}
-      <section className="relative z-10 max-w-6xl mx-auto px-6 pt-20 lg:pt-32 pb-20 text-center">
-        <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }}>
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-primary/30 bg-primary/10 text-xs text-primary mb-6 font-medium">
-            <Sparkles className="h-3 w-3" />
-            Empowering Modern Universities with AI
-          </div>
+      {/* Scroll-driven frame animation with content overlays */}
+      <ScrollFrameCanvas />
 
-          <h1 className="text-4xl sm:text-5xl lg:text-7xl font-bold tracking-tight leading-[1.1]">
-            <span className="text-foreground">L'Excellence Académique</span>
-            <br />
-            <span className="text-primary">& Gestion Intelligente</span>
-          </h1>
-
-          <p className="mt-6 text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-            L'optimisation académique intelligente propulsée par l'IA. Prévoyez les risques, optimisez les
-            emplois du temps et dotez votre corps professoral d'insights basés sur les données.
-          </p>
-
-          <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/dashboard">
-              <Button size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90 rounded-xl px-8 gap-2 shadow-lg shadow-primary/20">
-                Accéder au Tableau de bord
-                <ArrowRight className="h-4 w-4" />
-              </Button>
-            </Link>
-            <a href="#features">
-              <Button variant="outline" size="lg" className="border-border text-foreground hover:bg-secondary rounded-xl px-8">
-                En savoir plus
-              </Button>
-            </a>
-          </div>
-        </motion.div>
-
-        {/* Hero Image */}
-        <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.3 }}
-          className="mt-16 relative"
-        >
-          <div className="rounded-2xl overflow-hidden border border-border glow-md">
-            <img src={heroBg.src} alt="AI-powered department visualization" className="w-full h-auto" />
-          </div>
-          <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent rounded-2xl" />
-        </motion.div>
-      </section>
-
-      {/* Stats Bar */}
-      <section className="relative z-10 max-w-5xl mx-auto px-6 pb-20">
-        <motion.div {...fadeUp} transition={{ duration: 0.6 }} className="grid grid-cols-2 md:grid-cols-4 gap-6">
-          {stats.map((s) => (
-            <div key={s.label} className="text-center bg-card border border-border rounded-2xl p-6 card-hover">
-              <div className="text-3xl font-bold gradient-text">{s.value}</div>
-              <div className="text-sm text-muted-foreground mt-1">{s.label}</div>
-            </div>
-          ))}
-        </motion.div>
-      </section>
-
-      {/* Features */}
-      <section id="features" className="relative z-10 max-w-5xl mx-auto px-6 pb-20">
+      {/* How it Works */}
+      <section id="how-it-works" className="relative z-10 max-w-5xl mx-auto px-6 py-24">
         <motion.div {...fadeUp} transition={{ duration: 0.5 }} className="text-center mb-12">
-          <h2 className="text-3xl font-bold text-foreground">Tout ce dont vous avez besoin</h2>
-          <p className="text-muted-foreground mt-2 max-w-lg mx-auto">Outils complets pour la gestion moderne des départements universitaires.</p>
+          <h2 className="text-3xl font-bold text-foreground">Comment ça marche</h2>
+          <p className="text-muted-foreground mt-2">Quatre étapes simples pour transformer la gestion de votre département.</p>
         </motion.div>
-        <div className="grid md:grid-cols-3 gap-6">
-          {features.map((f, i) => (
-            <motion.div
-              key={f.title}
-              {...fadeUp}
-              transition={{ duration: 0.5, delay: i * 0.1 }}
-              className="bg-card border border-border rounded-2xl p-6 card-hover"
-            >
-              <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center mb-4">
-                <f.icon className="h-5 w-5 text-primary" />
-              </div>
-              <h3 className="font-semibold text-foreground mb-2">{f.title}</h3>
-              <p className="text-sm text-muted-foreground leading-relaxed">{f.desc}</p>
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {howItWorks.map((s, i) => (
+            <motion.div key={s.step} {...fadeUp} transition={{ duration: 0.5, delay: i * 0.1 }} className="bg-card border border-border rounded-2xl p-6 relative card-hover">
+              <span className="text-4xl font-bold gradient-text opacity-30 absolute top-4 right-4 font-mono">{s.step}</span>
+              <h4 className="font-semibold text-foreground mb-2 mt-4">{s.title}</h4>
+              <p className="text-sm text-muted-foreground leading-relaxed">{s.desc}</p>
             </motion.div>
           ))}
         </div>
       </section>
 
       {/* Showcase sections with images */}
-      <section className="relative z-10 max-w-6xl mx-auto px-6 pb-24 space-y-24">
+      <section id="showcase" className="relative z-10 max-w-6xl mx-auto px-6 pb-24 space-y-24">
         {/* Dashboard */}
         <motion.div {...fadeUp} transition={{ duration: 0.6 }} className="grid lg:grid-cols-2 gap-10 items-center">
           <div>
@@ -239,23 +152,6 @@ export default function Landing() {
         </motion.div>
       </section>
 
-      {/* How it Works */}
-      <section id="how-it-works" className="relative z-10 max-w-5xl mx-auto px-6 pb-24">
-        <motion.div {...fadeUp} transition={{ duration: 0.5 }} className="text-center mb-12">
-          <h2 className="text-3xl font-bold text-foreground">Comment ça marche</h2>
-          <p className="text-muted-foreground mt-2">Quatre étapes simples pour transformer la gestion de votre département.</p>
-        </motion.div>
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {howItWorks.map((s, i) => (
-            <motion.div key={s.step} {...fadeUp} transition={{ duration: 0.5, delay: i * 0.1 }} className="bg-card border border-border rounded-2xl p-6 relative card-hover">
-              <span className="text-4xl font-bold gradient-text opacity-30 absolute top-4 right-4 font-mono">{s.step}</span>
-              <h4 className="font-semibold text-foreground mb-2 mt-4">{s.title}</h4>
-              <p className="text-sm text-muted-foreground leading-relaxed">{s.desc}</p>
-            </motion.div>
-          ))}
-        </div>
-      </section>
-
       {/* Testimonials */}
       <section id="testimonials" className="relative z-10 max-w-5xl mx-auto px-6 pb-24">
         <motion.div {...fadeUp} transition={{ duration: 0.5 }} className="text-center mb-12">
@@ -285,7 +181,7 @@ export default function Landing() {
         <motion.div {...fadeUp} transition={{ duration: 0.6 }} className="bg-card border border-border rounded-2xl p-10 glow-md">
           <h2 className="text-2xl font-bold text-foreground mb-3">Prêt à transformer votre département ?</h2>
           <p className="text-muted-foreground mb-6">Commencez dès aujourd'hui avec nos outils de gestion IA.</p>
-          <Link href="/dashboard">
+          <Link href="/auth">
             <Button size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90 rounded-xl px-8 gap-2 glow-sm">
               Commencer <ArrowRight className="h-4 w-4" />
             </Button>
