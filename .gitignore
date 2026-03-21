@@ -30,3 +30,5 @@ build
 .vercel
 *.env
 *.env.local
+.venv
+
