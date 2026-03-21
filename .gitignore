@@ -31,4 +31,5 @@ build
 *.env
 *.env.local
 .venv
+venv/
 
