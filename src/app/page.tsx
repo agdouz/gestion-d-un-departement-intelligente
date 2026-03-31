@@ -8,6 +8,7 @@ import landingDashboard from "@/assets/academic-dashboard.png";
 import landingAi from "@/assets/academic-lab.png";
 import landingSchedule from "@/assets/academic-schedule.png";
 import customLogo from "@/assets/smart-knowledge-logo.png";
+import fsjesLogo from "@/assets/fsjes-logo.png";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import ScrollFrameCanvas from "@/components/ScrollFrameCanvas";
 
@@ -18,43 +19,100 @@ const howItWorks = [
   { step: "04", title: "Implémentez", desc: "Appliquez les changements et suivez les améliorations avec nos tableaux de bord." },
 ];
 
+const programs = [
+  {
+    id: "intl-management",
+    title: "Licence Management International",
+    description: "Une formation d'excellence pour préparer les leaders de demain aux défis du commerce mondial, avec une forte dimension interculturelle et stratégique.",
+    videoId: "Chn1nBLKrug",
+  },
+  {
+    id: "marketing",
+    title: "Licence Marketing",
+    description: "Maîtrisez les nouvelles tendances du marketing digital, l'analyse du comportement consommateur et la conception de stratégies de marque innovantes.",
+    videoId: "USZKT3N1QQw",
+  },
+  {
+    id: "logistique",
+    title: "Licence Logistique",
+    description: "Devenez un expert de la chaîne d'approvisionnement (Supply Chain), de l'optimisation des flux internationaux et de la gestion des opérations.",
+    videoId: "2-m5Cyx4A-k",
+  },
+  {
+    id: "management",
+    title: "Licence Management",
+    description: "Acquérez des compétences fondamentales et pratiques en gestion d'entreprise, ressources humaines et prise de décision stratégique.",
+    videoId: "XbPx0gb7Znk",
+  }
+];
+
 const testimonials = [
-  { name: "Prof. Marie Laurent", role: "Doyenne, Informatique", quote: "Smart Knowledge a réduit nos conflits horaires de 40% dès le premier semestre.", rating: 5 },
+  { name: "Prof. Marie Laurent", role: "Doyenne, Sciences de Gestion", quote: "FSJES Analytics a réduit nos conflits horaires de 40% dès le premier semestre.", rating: 5 },
   { name: "Dr. Ahmed Benkhedda", role: "Chef de Département de Recherche IA", quote: "La prédiction du burn-out nous a permis de sauver deux de nos meilleurs chercheurs.", rating: 5 },
   { name: "Prof. Tanaka Hiroshi", role: "Vice-Président, Affaires Académiques", quote: "Enfin un outil qui comprend la complexité de la gestion universitaire.", rating: 5 },
 ];
 
 const fadeUp = {
-  initial: { opacity: 0, y: 30 },
-  whileInView: { opacity: 1, y: 0 },
+  initial: { opacity: 0, y: 40, scale: 0.98 },
+  whileInView: { opacity: 1, y: 0, scale: 1 },
   viewport: { once: true, margin: "-50px" },
 };
 
 export default function Landing() {
   return (
     <div className="min-h-screen bg-transparent relative">
-      {/* Fixed Navbar — always on top of the scroll animation */}
-      <header className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 lg:px-12 py-4 backdrop-blur-md bg-black/20">
-        <div className="flex items-center gap-3">
-          <div className="h-10 w-10 rounded-lg flex items-center justify-center overflow-hidden bg-white shadow-md">
-            <img src={customLogo.src} alt="Smart Knowledge Logo" className="h-full w-full object-cover" />
+      {/* Floating Premium Glass Navbar */}
+      <header className="absolute top-6 left-0 right-0 z-50 flex justify-center w-full px-4 sm:px-6 pointer-events-none">
+        <motion.div 
+          initial={{ y: -40, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          className="flex items-center justify-between w-full max-w-6xl px-2 sm:px-3 py-2 sm:py-3 bg-black/20 hover:bg-black/40 backdrop-blur-2xl border border-white/10 rounded-full shadow-[0_8px_32px_rgba(0,0,0,0.3)] transition-all duration-500 pointer-events-auto group"
+        >
+          {/* LEFT: Logo & Brand (flex-1 ensures perfect symmetry) */}
+          <div className="flex items-center gap-3 flex-1">
+            <div className="h-10 sm:h-12 w-10 sm:w-12 flex items-center justify-center rounded-full overflow-hidden bg-white shadow-inner border border-white/20 flex-shrink-0">
+              <img src={fsjesLogo.src} alt="FSJES Marrakech" className="h-[70%] w-auto object-contain" />
+            </div>
+            <div className="hidden lg:flex flex-col">
+              <span className="font-bold text-white leading-tight tracking-tight text-sm drop-shadow-md">
+                FSJES Analytics
+              </span>
+              <span className="text-[10px] text-gray-300 font-medium uppercase tracking-widest opacity-80 group-hover:opacity-100 transition-opacity">
+                Université Cadi Ayyad
+              </span>
+            </div>
           </div>
-          <div className="hidden sm:block h-6 w-px bg-white/30"></div>
-          <span className="font-semibold text-white tracking-tight hidden sm:block drop-shadow-md">Smart Knowledge</span>
-        </div>
-        <nav className="hidden md:flex items-center gap-6 text-sm text-gray-100 font-medium drop-shadow-md">
-          <a href="#how-it-works" className="hover:text-white transition-colors">Comment ça marche</a>
-          <a href="#showcase" className="hover:text-white transition-colors">Fonctionnalités</a>
-          <a href="#testimonials" className="hover:text-white transition-colors">Témoignages</a>
-        </nav>
-        <div className="flex items-center gap-2 drop-shadow-md text-white">
-          <ThemeToggle />
-          <Link href="/auth">
-            <Button variant="outline" size="sm" className="hidden sm:inline-flex border-white/50 bg-white/10 text-white hover:bg-white/20 backdrop-blur-sm">
-              Se connecter
-            </Button>
-          </Link>
-        </div>
+
+          {/* CENTER: Navigation Links */}
+          <nav className="hidden md:flex items-center justify-center gap-10 px-6 text-sm font-semibold tracking-wide text-gray-300">
+            <a href="#how-it-works" className="relative group/link hover:text-white transition-colors py-1">
+              Plateforme
+              <span className="absolute bottom-0 left-0 w-full h-0.5 bg-primary scale-x-0 group-hover/link:scale-x-100 transition-transform origin-left duration-300" />
+            </a>
+            <a href="#showcase" className="relative group/link hover:text-white transition-colors py-1">
+              Intelligence
+              <span className="absolute bottom-0 left-0 w-full h-0.5 bg-primary scale-x-0 group-hover/link:scale-x-100 transition-transform origin-left duration-300" />
+            </a>
+            <a href="#testimonials" className="relative group/link hover:text-white transition-colors py-1">
+              Impact
+              <span className="absolute bottom-0 left-0 w-full h-0.5 bg-primary scale-x-0 group-hover/link:scale-x-100 transition-transform origin-left duration-300" />
+            </a>
+          </nav>
+
+          {/* RIGHT: Actions (flex-1 justify-end ensures symmetry) */}
+          <div className="flex items-center gap-4 flex-1 justify-end">
+            <div className="hidden sm:block opacity-70 hover:opacity-100 transition-opacity">
+              <ThemeToggle />
+            </div>
+            <Link href="/auth">
+              <Button size="sm" className="rounded-full px-5 sm:px-7 py-5 bg-white text-black hover:bg-gray-100 font-bold shadow-[0_0_20px_rgba(255,255,255,0.15)] hover:shadow-[0_0_30px_rgba(255,255,255,0.3)] transition-all duration-300 transform hover:scale-105 border border-white/50">
+                Se connecter
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
+            </Link>
+          </div>
+        </motion.div>
       </header>
 
       {/* Scroll-driven frame animation with content overlays */}
@@ -152,6 +210,34 @@ export default function Landing() {
         </motion.div>
       </section>
 
+      {/* Formations / Videos */}
+      <section id="formations" className="relative z-10 max-w-7xl mx-auto px-6 pb-24">
+        <motion.div {...fadeUp} transition={{ duration: 0.5 }} className="text-center mb-12">
+          <h2 className="text-3xl font-bold text-foreground">Nos Formations d'Excellence</h2>
+          <p className="text-muted-foreground mt-2">Découvrez nos programmes de Licence en sciences de gestion et management.</p>
+        </motion.div>
+        <div className="grid md:grid-cols-2 gap-8">
+          {programs.map((prog, i) => (
+            <motion.div key={prog.id} {...fadeUp} transition={{ duration: 0.5, delay: i * 0.1 }} className="bg-card border border-border rounded-2xl overflow-hidden shadow-sm card-hover flex flex-col">
+              <div className="aspect-video w-full bg-black/5 relative">
+                <iframe 
+                  className="absolute inset-0 w-full h-full"
+                  src={`https://www.youtube.com/embed/${prog.videoId}`} 
+                  title={prog.title} 
+                  frameBorder="0" 
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                  allowFullScreen
+                ></iframe>
+              </div>
+              <div className="p-6">
+                <h3 className="text-xl font-bold text-foreground mb-2">{prog.title}</h3>
+                <p className="text-sm text-muted-foreground leading-relaxed">{prog.description}</p>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      </section>
+
       {/* Testimonials */}
       <section id="testimonials" className="relative z-10 max-w-5xl mx-auto px-6 pb-24">
         <motion.div {...fadeUp} transition={{ duration: 0.5 }} className="text-center mb-12">
@@ -196,9 +282,9 @@ export default function Landing() {
             <div className="h-6 w-6 rounded-md bg-primary/20 flex items-center justify-center">
               <Sparkles className="h-3 w-3 text-primary" />
             </div>
-            <span className="text-sm text-muted-foreground">Département EMSI Intelligent</span>
+            <span className="text-sm text-muted-foreground">Département Sciences de Gestion - FSJES Marrakech</span>
           </div>
-          <p className="text-xs text-muted-foreground">© 2026 Smart Knowledge. Tous droits réservés.</p>
+          <p className="text-xs text-muted-foreground">© 2026 FSJES Analytics — Université Cadi Ayyad. Tous droits réservés.</p>
         </div>
       </footer>
     </div>

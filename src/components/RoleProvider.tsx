@@ -2,7 +2,7 @@
 
 import React, { createContext, useContext, useState, ReactNode } from "react";
 
-type Role = "Professeur" | "Admin Dept" | "Super Admin";
+type Role = "Professeur" | "Admin Dept" | "Super Admin" | "Étudiant";
 
 interface RoleContextType {
     currentRole: Role;

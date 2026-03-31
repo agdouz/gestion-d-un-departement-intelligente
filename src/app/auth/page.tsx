@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import { GraduationCap, Shield, Building2, User, ArrowLeft } from "lucide-react";
 import Link from "next/link";
-import customLogo from "@/assets/smart-knowledge-logo.png";
+import fsjesLogo from "@/assets/fsjes-logo.png";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { Button } from "@/components/ui/button";
 
@@ -33,23 +33,33 @@ export default function AuthPage() {
             id: "superadmin",
             icon: Shield,
             title: "Super Admin",
-            desc: "Accès complet à la plateforme EMSI",
+            desc: "Accès complet à la plateforme FSJES",
             href: "/auth/superadmin",
             color: "text-foreground",
             bg: "bg-secondary",
             hoverBorder: "hover:border-foreground/50"
+        },
+        {
+            id: "etudiant",
+            icon: User,
+            title: "Étudiant",
+            desc: "Accès à l'évaluation des enseignements (IA)",
+            href: "/auth/etudiant",
+            color: "text-success",
+            bg: "bg-success/5",
+            hoverBorder: "hover:border-success/50"
         }
     ];
 
     return (
-        <div className="min-h-screen relative flex flex-col justify-center py-12 sm:px-6 lg:px-8 overflow-hidden">
+        <div className="min-h-screen relative flex flex-col justify-end pb-24 pt-16 sm:px-6 lg:px-8 overflow-hidden">
             {/* Background Image */}
             <div 
-                className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-                style={{ backgroundImage: "url('/images/vitaly-gariev.jpg')" }}
+                className="absolute inset-0 bg-cover bg-center bg-no-repeat brightness-125"
+                style={{ backgroundImage: "url('/images/cadi ayyad entrance.jpg')" }}
             />
             {/* Dark overlay for text readability without being too white/blurry */}
-            <div className="absolute inset-0 bg-black/40" />
+            <div className="absolute inset-0 bg-black/30" />
 
             {/* Back to Home Button */}
             <div className="absolute top-6 left-6 z-20">
@@ -60,24 +70,18 @@ export default function AuthPage() {
                     </Button>
                 </Link>
             </div>            <div className="sm:mx-auto sm:w-full sm:max-w-md relative z-10 flex flex-col items-center">
-                <div className="h-14 w-14 rounded-xl flex items-center justify-center overflow-hidden bg-white mb-6 shadow-sm border border-border">
-                    <img src={customLogo.src} alt="Smart Knowledge Logo" className="h-full w-full object-cover" />
+                <div className="h-24 sm:h-28 w-auto rounded-xl flex items-center justify-center overflow-hidden bg-white/95 mb-6 shadow-md px-4 py-2">
+                    <img src={fsjesLogo.src} alt="FSJES Marrakech" className="h-full w-auto object-contain" />
                 </div>
-                <h2 className="mt-2 text-center text-3xl font-bold tracking-tight text-foreground">
-                    Bienvenue sur EMSI Analytics
-                </h2>
-                <p className="mt-2 text-center text-sm text-muted-foreground">
-                    Sélectionnez votre profil pour vous connecter
-                </p>
             </div>
 
             <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="mt-8 sm:mx-auto sm:w-full sm:max-w-xl relative z-10"
+                className="mt-8 sm:mx-auto sm:w-full sm:max-w-4xl relative z-10"
             >
                 <div className="bg-card py-10 px-4 shadow-xl shadow-black/5 sm:rounded-3xl border border-border sm:px-12">
-                    <div className="grid gap-4 sm:grid-cols-1 md:grid-cols-3">
+                    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
                         {roles.map((role, i) => {
                             const Icon = role.icon;
                             return (

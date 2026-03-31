@@ -13,16 +13,15 @@ const typeConfig = {
   optimization: { icon: Zap, color: "text-primary", bg: "bg-primary/10", border: "border-primary/20", label: "Optimisation" },
 };
 
-// Mock data for new predictive sections
 const burnoutRisk = [
-  { name: "Dr. James Wilson", department: "Computer Science", load: 30, maxLoad: 24, students: 240, riskLevel: "Critique", action: "Réduire la charge de 6h/semaine", avatar: "JW" },
-  { name: "Dr. Robert Kim", department: "AI Research", load: 28, maxLoad: 24, students: 200, riskLevel: "Élevé", action: "Réaffecter 1 cours magistral", avatar: "RK" },
+  { name: "Pr. Grine Abdelhadi", department: "Sciences de Gestion", load: 28, maxLoad: 24, students: 250, riskLevel: "Élevé", action: "Réaffecter 1 TD de Fiscalité", avatar: "GA" },
+  { name: "Pr. Rigar Sidi Mohamed", department: "Sciences de Gestion", load: 26, maxLoad: 24, students: 165, riskLevel: "Modéré", action: "Alléger les encadrements S6", avatar: "RS" },
 ];
 
 const passRatePredictions = [
-  { course: "Big Data & Data Mining", major: "Data Science", predictedFailure: 35, trend: "up", reason: "Complexité du projet final & charge condensée", action: "Ajouter 4h de séances de tutorat intégrées" },
-  { course: "Traitement d&apos;Image", major: "IA & Computer Vision", predictedFailure: 28, trend: "stable", reason: "Transition abrupte entre théorie et pratique", action: "Intercaler un mini-projet de transition" },
-  { course: "Cryptographie", major: "Sécurité Informationnelle", predictedFailure: 18, trend: "down", reason: "Excellente pédagogie (Dr. Hassan)", action: "Maintenir la méthodologie actuelle" },
+  { course: "Fiscalité de l'Entreprise", major: "Licence Management", predictedFailure: 32, trend: "up", reason: "Densité du programme et cas pratiques complexes", action: "Intercaler une séance de révision ciblée" },
+  { course: "Finance Internationale", major: "Management International", predictedFailure: 25, trend: "stable", reason: "Rupture de niveau en calculs financiers", action: "Ajouter 2h de tutorat en calcul financier" },
+  { course: "Comportement du Consommateur", major: "Licence Marketing", predictedFailure: 12, trend: "down", reason: "Excellente pédagogie (Prof. Benmansour)", action: "Maintenir la méthodologie interactive" },
 ];
 
 export default function AIInsights() {

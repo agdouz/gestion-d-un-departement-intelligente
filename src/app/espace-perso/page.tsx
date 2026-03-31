@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import {
     UserCircle, Mail, MapPin, Phone, GraduationCap, Briefcase, Award,
     Clock, Upload, FileText, Video, Plus, FileDown, ChevronDown, CheckCircle2,
-    Calendar as CalendarIcon, AlertCircle
+    Calendar as CalendarIcon, AlertCircle, Loader2
 } from "lucide-react";
 import DashboardLayout from "@/components/DashboardLayout";
 import { Button } from "@/components/ui/button";
@@ -49,6 +49,42 @@ const TIME_SLOTS = ["08:00-10:00", "10:00-12:00", "14:00-16:00", "16:00-18:00"];
 export default function EspacePersonnel() {
     // Availability State
     const [availability, setAvailability] = useState<Record<string, "available" | "unavailable" | "preferred">>({});
+    const [aiFeedback, setAiFeedback] = useState(personalData.aiFeedback);
+    const [isGenerating, setIsGenerating] = useState(false);
+    const [apiError, setApiError] = useState("");
+
+    const generateFeedback = async () => {
+        setIsGenerating(true);
+        setApiError("");
+        try {
+            const response = await fetch("http://localhost:8000/api/ai/feedback/generate/", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    name: personalData.name,
+                    courses: ["Machine Learning", "Deep Learning", "AI Ethics"],
+                    evaluations: personalData.evaluations,
+                    comments: ["Le cours est génial", "Les TP sont parfois trop théoriques", "Excellent professeur mais j'aimerais plus de projets pratiques", "Supports très clairs"]
+                })
+            });
+
+            const data = await response.json();
+            
+            if (response.ok) {
+                setAiFeedback(data);
+            } else {
+                console.error("API Error:", data);
+                setApiError(data.error || "Une erreur est survenue lors de la génération.");
+            }
+        } catch (error) {
+            console.error("Fetch Error:", error);
+            setApiError("Impossible de contacter le serveur d'IA (Django).");
+        } finally {
+            setIsGenerating(false);
+        }
+    };
 
     const toggleAvailability = (day: string, time: string) => {
         const key = `${day}-${time}`;
@@ -450,26 +486,45 @@ export default function EspacePersonnel() {
                                         <Sparkles className="h-32 w-32 text-primary" />
                                     </div>
 
-                                    <h3 className="text-lg font-bold text-foreground flex items-center gap-2 mb-2 relative z-10">
-                                        <Sparkles className="h-5 w-5 text-primary" /> Analyse & Conseils IA
-                                    </h3>
-                                    <p className="text-sm text-muted-foreground mb-6 relative z-10 max-w-xl">
-                                        Cette analyse est générée automatiquement à partir des commentaires anonymes laissés par vos étudiants ce semestre.
-                                    </p>
+                                    <div className="flex justify-between items-start relative z-10 mb-6 w-full">
+                                        <div>
+                                            <h3 className="text-lg font-bold text-foreground flex items-center gap-2 mb-2">
+                                                <Sparkles className="h-5 w-5 text-primary" /> Analyse & Conseils IA
+                                            </h3>
+                                            <p className="text-sm text-muted-foreground max-w-xl">
+                                                Cette analyse est générée automatiquement à partir des commentaires anonymes laissés par vos étudiants ce semestre.
+                                            </p>
+                                        </div>
+                                        <Button
+                                            onClick={generateFeedback}
+                                            disabled={isGenerating}
+                                            className="bg-primary text-primary-foreground gap-2 shrink-0"
+                                        >
+                                            {isGenerating ? <Loader2 className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
+                                            {isGenerating ? "Génération..." : "Générer analyse"}
+                                        </Button>
+                                    </div>
+
+                                    {apiError && (
+                                        <div className="mb-6 bg-destructive/10 border border-destructive/20 text-destructive text-sm rounded-xl p-4 flex items-center gap-2 relative z-10">
+                                            <AlertCircle className="h-4 w-4 shrink-0" />
+                                            <p>{apiError}</p>
+                                        </div>
+                                    )}
 
                                     <div className="bg-card/80 backdrop-blur border border-border rounded-xl p-5 mb-6 relative z-10">
                                         <p className="text-sm text-foreground leading-relaxed">
-                                            {personalData.aiFeedback.summary}
+                                            {isGenerating ? "Analyse des données en cours..." : aiFeedback.summary}
                                         </p>
                                     </div>
 
                                     <div className="grid sm:grid-cols-2 gap-4 relative z-10">
-                                        <div className="bg-success/5 border border-success/20 rounded-xl p-5">
+                                        <div className="bg-success/5 border border-success/20 rounded-xl p-5 transition-opacity" style={{ opacity: isGenerating ? 0.5 : 1 }}>
                                             <h4 className="text-sm font-semibold text-success mb-3 flex items-center gap-2">
                                                 <TrendingUp className="h-4 w-4" /> Points Forts
                                             </h4>
                                             <ul className="space-y-2">
-                                                {personalData.aiFeedback.strengths.map((s, i) => (
+                                                {aiFeedback.strengths.map((s, i) => (
                                                     <li key={i} className="text-sm text-muted-foreground flex items-start gap-2">
                                                         <span className="text-success mt-1">•</span> {s}
                                                     </li>
@@ -477,12 +532,12 @@ export default function EspacePersonnel() {
                                             </ul>
                                         </div>
 
-                                        <div className="bg-accent/5 border border-accent/20 rounded-xl p-5">
+                                        <div className="bg-accent/5 border border-accent/20 rounded-xl p-5 transition-opacity" style={{ opacity: isGenerating ? 0.5 : 1 }}>
                                             <h4 className="text-sm font-semibold text-accent mb-3 flex items-center gap-2">
-                                                <AlertCircle className="h-4 w-4" /> Axes d&apos;Amélioration
+                                                <AlertCircle className="h-4 w-4" /> Axes d'Amélioration
                                             </h4>
                                             <ul className="space-y-2">
-                                                {personalData.aiFeedback.improvements.map((s, i) => (
+                                                {aiFeedback.improvements.map((s, i) => (
                                                     <li key={i} className="text-sm text-muted-foreground flex items-start gap-2">
                                                         <span className="text-accent mt-1">•</span> {s}
                                                     </li>

@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { GraduationCap, Mail, Lock, ArrowRight, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import customLogo from "@/assets/smart-knowledge-logo.png";
+import fsjesLogo from "@/assets/fsjes-logo.png";
 import { ThemeToggle } from "@/components/ThemeToggle";
 
 export default function ProfesseurAuthPage() {
@@ -18,8 +18,8 @@ export default function ProfesseurAuthPage() {
             </Link>
 
             <div className="sm:mx-auto sm:w-full sm:max-w-md relative z-10 flex flex-col items-center">
-                <div className="h-14 w-14 rounded-xl flex items-center justify-center overflow-hidden bg-white mb-6 shadow-sm border border-border">
-                    <img src={customLogo.src} alt="Smart Knowledge Logo" className="h-full w-full object-cover" />
+                <div className="h-24 sm:h-28 w-auto rounded-xl flex items-center justify-center overflow-hidden bg-white/95 mb-6 shadow-md px-4 py-2 border border-border">
+                    <img src={fsjesLogo.src} alt="FSJES Marrakech Logo" className="h-full w-auto object-contain" />
                 </div>
                 <h2 className="mt-2 text-center text-3xl font-bold tracking-tight text-foreground flex items-center gap-3">
                     <GraduationCap className="h-8 w-8 text-primary" /> Espace Professeur
@@ -37,7 +37,7 @@ export default function ProfesseurAuthPage() {
                 <div className="bg-card py-8 px-4 shadow-xl shadow-black/5 sm:rounded-2xl border border-border sm:px-10">
                     <div className="space-y-5">
                         <div>
-                            <label className="block text-sm font-medium text-foreground mb-1.5">Email EMSI</label>
+                            <label className="block text-sm font-medium text-foreground mb-1.5">Email FSJES</label>
                             <div className="relative">
                                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                     <Mail className="h-4 w-4 text-muted-foreground" />
@@ -45,7 +45,7 @@ export default function ProfesseurAuthPage() {
                                 <input
                                     type="email"
                                     className="block w-full pl-10 pr-3 py-2 border border-border rounded-lg bg-background text-foreground focus:ring-2 focus:ring-primary focus:border-primary transition-shadow sm:text-sm"
-                                    placeholder="prenom.nom@emsi.ma"
+                                    placeholder="prenom.nom@fsjes.uca.ma"
                                 />
                             </div>
                         </div>

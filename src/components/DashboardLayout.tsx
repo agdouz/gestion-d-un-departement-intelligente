@@ -35,6 +35,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import fsjesLogo from "@/assets/fsjes-logo.png";
 
 const allNavItems = [
   { label: "Tableau de Bord", icon: LayoutDashboard, path: "/dashboard", roles: ["Super Admin", "Admin Dept"] },
@@ -56,14 +57,16 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
   const NavContent = () => (
     <div className="flex flex-col h-full">
-      <Link href="/" className="p-4 flex items-center gap-2 transition-opacity hover:opacity-80">
-        <div className="h-8 w-8 rounded-lg bg-primary/20 flex items-center justify-center">
-          <Sparkles className="h-4 w-4 text-primary" />
+      <Link href="/" className="p-5 flex flex-col items-center gap-4 border-b border-border/50 bg-background/50 backdrop-blur-sm">
+        <div className="h-20 sm:h-24 w-auto rounded-xl flex items-center justify-center overflow-hidden bg-white/95 shadow-sm px-3 py-2 border border-border">
+          <img src={fsjesLogo.src} alt="FSJES Logo" className="h-full w-auto object-contain" />
         </div>
         {sidebarOpen && (
-          <span className="font-semibold text-foreground text-sm tracking-tight">
-            Smart Knowledge
-          </span>
+          <div className="w-full text-center">
+            <span className="font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/70 text-sm tracking-wider uppercase">
+              FSJES Analytics
+            </span>
+          </div>
         )}
       </Link>
 
@@ -77,33 +80,33 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 key={item.label}
                 href={item.path}
                 onClick={() => setMobileOpen(false)}
-                className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-all duration-200 group ${isActive
-                  ? "bg-primary/10 text-primary"
-                  : "text-muted-foreground hover:text-foreground hover:bg-secondary"
+                className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-300 group ${isActive
+                  ? "bg-primary text-primary-foreground shadow-md shadow-primary/20 translate-x-1"
+                  : "text-muted-foreground hover:text-foreground hover:bg-secondary/80 hover:translate-x-1"
                   }`}
               >
-                <item.icon className={`h-4 w-4 flex-shrink-0 ${isActive ? "text-primary" : ""}`} />
+                <item.icon className={`h-5 w-5 flex-shrink-0 transition-colors ${isActive ? "text-primary-foreground" : "text-muted-foreground group-hover:text-primary"}`} />
                 {sidebarOpen && <span>{item.label}</span>}
                 {isActive && sidebarOpen && (
-                  <div className="ml-auto h-1.5 w-1.5 rounded-full bg-primary animate-pulse-glow" />
+                  <div className="ml-auto h-2 w-2 rounded-full bg-primary-foreground/80 animate-pulse" />
                 )}
               </Link>
             );
           })}
       </nav>
 
-      <div className="p-4 border-t border-border">
-        <div className="flex items-center gap-3">
-          <Avatar className="h-8 w-8">
-            <AvatarFallback className="bg-primary/20 text-primary text-xs">
+      <div className="p-5 border-t border-border/50 bg-background/30 backdrop-blur-sm">
+        <div className="flex items-center gap-3 p-2 rounded-xl bg-secondary/50 border border-border">
+          <Avatar className="h-9 w-9 border-2 border-background shadow-sm">
+            <AvatarFallback className="bg-primary/10 text-primary font-bold text-xs ring-1 ring-primary/20">
               {currentRole === "Professeur" ? "PR" : currentRole === "Admin Dept" ? "AD" : "SA"}
             </AvatarFallback>
           </Avatar>
           {sidebarOpen && (
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium text-foreground truncate">{currentRole}</p>
-              <p className="text-xs text-muted-foreground truncate">
-                {currentRole === "Professeur" ? "dr.chen@emsi.ma" : "admin@emsi.ma"}
+              <p className="text-sm font-bold text-foreground truncate">{currentRole}</p>
+              <p className="text-xs text-muted-foreground truncate font-medium">
+                {currentRole === "Professeur" ? "prof@fsjes.uca.ma" : "admin@fsjes.uca.ma"}
               </p>
             </div>
           )}
@@ -116,7 +119,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     <div className="min-h-screen flex bg-transparent">
       {/* Desktop Sidebar */}
       <aside
-        className={`hidden lg:flex flex-col border-r border-border bg-sidebar transition-all duration-300 ${sidebarOpen ? "w-60" : "w-16"
+        className={`hidden lg:flex flex-col border-r border-border/60 bg-card/40 backdrop-blur-xl shadow-2xl transition-all duration-400 ease-[cubic-bezier(0.25,0.8,0.25,1)] ${sidebarOpen ? "w-72" : "w-20"
           }`}
       >
         <NavContent />

@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { Shield, Mail, Lock, ArrowRight, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import customLogo from "@/assets/smart-knowledge-logo.png";
+import fsjesLogo from "@/assets/fsjes-logo.png";
 import { ThemeToggle } from "@/components/ThemeToggle";
 
 export default function SuperAdminAuthPage() {
@@ -19,14 +19,14 @@ export default function SuperAdminAuthPage() {
             </Link>
 
             <div className="sm:mx-auto sm:w-full sm:max-w-md relative z-10 flex flex-col items-center">
-                <div className="h-14 w-14 rounded-xl flex items-center justify-center overflow-hidden bg-white mb-6 shadow-sm border border-border">
-                    <img src={customLogo.src} alt="Smart Knowledge Logo" className="h-full w-full object-cover" />
+                <div className="h-24 sm:h-28 w-auto rounded-xl flex items-center justify-center overflow-hidden bg-white/95 mb-6 shadow-md px-4 py-2 border border-border">
+                    <img src={fsjesLogo.src} alt="FSJES Marrakech Logo" className="h-full w-auto object-contain" />
                 </div>
                 <h2 className="mt-2 text-center text-3xl font-bold tracking-tight text-foreground flex items-center gap-3">
                     <Shield className="h-8 w-8 text-foreground" /> Super Administrateur
                 </h2>
                 <p className="mt-2 text-center text-sm text-muted-foreground">
-                    Accès global au système EMSI
+                    Accès global au système FSJES
                 </p>
             </div>
 
@@ -46,7 +46,7 @@ export default function SuperAdminAuthPage() {
                                 <input
                                     type="text"
                                     className="block w-full pl-10 pr-3 py-2 border border-border rounded-lg bg-background text-foreground focus:ring-2 focus:ring-ring focus:border-ring transition-shadow sm:text-sm"
-                                    placeholder="root@emsi.ma"
+                                    placeholder="root@fsjes.uca.ma"
                                 />
                             </div>
                         </div>

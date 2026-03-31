@@ -18,25 +18,58 @@ import {
 
 // Mock Data for "Filières"
 const filieresData = [
-    { id: 1, name: "Génie Informatique & Réseaux", code: "GIR", level: "Cycle d'Ingénieur", students: 340, activeCourses: 24 },
-    { id: 2, name: "Ingénierie de l'Intelligence Artificielle", code: "IIA", level: "Cycle d'Ingénieur", students: 215, activeCourses: 18 },
-    { id: 3, name: "Ingénierie Financière et Audit", code: "IFA", level: "Cycle d'Ingénieur", students: 180, activeCourses: 15 },
-    { id: 4, name: "Classe Préparatoire Intégrée", code: "CP", level: "Classes Préparatoires", students: 450, activeCourses: 12 },
+    { id: 1, name: "Licence Management International", code: "LMI", level: "Licence Fondamentale", students: 120, activeCourses: 14 },
+    { id: 2, name: "Licence Marketing", code: "LMG", level: "Licence Fondamentale", students: 150, activeCourses: 16 },
+    { id: 3, name: "Licence Logistique", code: "LLG", level: "Licence Professionnelle", students: 95, activeCourses: 12 },
+    { id: 4, name: "Licence Management", code: "LMN", level: "Licence Fondamentale", students: 200, activeCourses: 15 },
 ];
 
-const mockCurriculum = [
-    { id: 1, code: "CS301", name: "Machine Learning Avancé", credits: 6, hetd: 45 },
-    { id: 2, code: "CS302", name: "Deep Learning & Vision", credits: 5, hetd: 40 },
-    { id: 3, code: "CS303", name: "Big Data Architecture", credits: 5, hetd: 42 },
-    { id: 4, code: "MGT301", name: "Management de l'Innovation", credits: 4, hetd: 30 },
-];
+const ucaCurriculums: Record<string, any[]> = {
+    "LMI": [
+        { id: 1, code: "LMI51", name: "Management Interculturel", credits: 5, hetd: 40 },
+        { id: 2, code: "LMI52", name: "Géopolitique et Économie Mondiale", credits: 4, hetd: 30 },
+        { id: 3, code: "LMI53", name: "Finance Internationale", credits: 5, hetd: 45 },
+        { id: 4, code: "LMI54", name: "Marketing International", credits: 5, hetd: 40 },
+        { id: 5, code: "LMI55", name: "Supply Chain Globale", credits: 5, hetd: 40 },
+        { id: 6, code: "LMI56", name: "Anglais des Affaires", credits: 6, hetd: 45 },
+    ],
+    "LMG": [
+        { id: 1, code: "LMG51", name: "Comportement du Consommateur", credits: 5, hetd: 45 },
+        { id: 2, code: "LMG52", name: "Marketing Digital et E-commerce", credits: 5, hetd: 40 },
+        { id: 3, code: "LMG53", name: "Études de Marché et Analyse de Données", credits: 5, hetd: 50 },
+        { id: 4, code: "LMG54", name: "Communication Marketing Intégrée", credits: 5, hetd: 40 },
+        { id: 5, code: "LMG55", name: "Stratégie de Marque", credits: 5, hetd: 40 },
+        { id: 6, code: "LMG56", name: "Droit du Numérique", credits: 5, hetd: 35 },
+    ],
+    "LLG": [
+        { id: 1, code: "LLG51", name: "Logistique d'Achat et Approvisionnement", credits: 5, hetd: 45 },
+        { id: 2, code: "LLG52", name: "Gestion de Production et Qualité", credits: 6, hetd: 50 },
+        { id: 3, code: "LLG53", name: "Transport et Logistique Internationale", credits: 5, hetd: 40 },
+        { id: 4, code: "LLG54", name: "Gestion des Stocks et Entrepôts", credits: 5, hetd: 45 },
+        { id: 5, code: "LLG55", name: "Systèmes d'Information (ERP)", credits: 5, hetd: 40 },
+        { id: 6, code: "LLG56", name: "Droit des Transports", credits: 4, hetd: 30 },
+    ],
+    "LMN": [
+        { id: 1, code: "LMN51", name: "Contrôle de Gestion", credits: 6, hetd: 50 },
+        { id: 2, code: "LMN52", name: "Gestion des Ressources Humaines", credits: 5, hetd: 45 },
+        { id: 3, code: "LMN53", name: "Finance d'Entreprise", credits: 5, hetd: 45 },
+        { id: 4, code: "LMN54", name: "Fiscalité de l'Entreprise", credits: 5, hetd: 40 },
+        { id: 5, code: "LMN55", name: "Management Stratégique", credits: 5, hetd: 45 },
+        { id: 6, code: "LMN56", name: "Droit des Affaires", credits: 4, hetd: 35 },
+    ]
+};
 
 export default function Filieres() {
     const { currentRole } = useRole();
     const isProfessor = currentRole === "Professeur";
     const [search, setSearch] = useState("");
     const [selectedFiliere, setSelectedFiliere] = useState<any>(null);
-    const [curriculum, setCurriculum] = useState(mockCurriculum);
+    const [curriculum, setCurriculum] = useState<any[]>([]);
+
+    // Automatically load the right curriculum when a filiere is selected
+    useState(() => {
+        // Handled directly via onClick or effect (see below)
+    });
 
     const filtered = filieresData.filter((f) =>
         f.name.toLowerCase().includes(search.toLowerCase()) ||
@@ -117,7 +150,10 @@ export default function Filieres() {
                             <Button
                                 variant="outline"
                                 className="w-full mt-6 border-border hover:bg-secondary"
-                                onClick={() => setSelectedFiliere(filiere)}
+                                onClick={() => {
+                                    setSelectedFiliere(filiere);
+                                    setCurriculum(ucaCurriculums[filiere.code] || []);
+                                }}
                             >
                                 {isProfessor ? "Voir le Programme" : "Gérer le Programme"}
                             </Button>

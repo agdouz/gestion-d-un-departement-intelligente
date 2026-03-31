@@ -26,7 +26,7 @@ const SCROLL_HEIGHT = "600vh"; // taller to give room for content sections
 
 function framePath(index: number): string {
   const padded = String(index).padStart(3, "0");
-  return `/frames/frame_${padded}.webp`;
+  return `/frames/frame_${padded}.jpg`;
 }
 
 /* ───────────────────── Content sections data ──────────────────── */
@@ -205,12 +205,12 @@ const scrollSections = [
           <Sparkles className="h-4 w-4 text-primary" />
           Bienvenue dans le futur
         </div>
-        <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-4 drop-shadow-lg">
-          L'IA au service de{" "}
-          <span className="text-primary">l'Université</span>
+        <h2 className="text-3xl sm:text-4xl lg:text-6xl font-bold text-white mb-4 drop-shadow-lg leading-[1.1]">
+          Le Système est désormais<br/>
+          <span className="text-primary mt-2 drop-shadow-[0_2px_10px_rgba(0,0,0,0.8)]">Intelligent</span>
         </h2>
-        <p className="text-gray-300 max-w-lg mx-auto mb-8">
-          Prêt à transformer votre département ? Commencez dès aujourd'hui.
+        <p className="text-gray-200 text-lg max-w-lg mx-auto mb-8 font-medium bg-black/20 px-4 py-2 rounded-xl backdrop-blur-sm">
+          L'université de demain commence ici.
         </p>
         <Link href="/auth">
           <Button
@@ -439,15 +439,21 @@ export default function ScrollFrameCanvas() {
           </div>
         )}
 
-        {/* Content sections — each fades in/out at different scroll positions */}
-        {isLoaded &&
-          scrollSections.map((section) => (
+        {/* Content sections: Show hero at start, and intelligent title at the end */}
+        {isLoaded && (
+          <>
             <ScrollSection
-              key={section.id}
-              section={section}
+              key={scrollSections[0].id}
+              section={scrollSections[0]}
               scrollYProgress={scrollYProgress}
             />
-          ))}
+            <ScrollSection
+              key={scrollSections[5].id}
+              section={scrollSections[5]}
+              scrollYProgress={scrollYProgress}
+            />
+          </>
+        )}
 
         {/* Scroll indicator — visible only at the very start */}
         {isLoaded && (

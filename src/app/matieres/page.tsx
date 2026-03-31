@@ -24,18 +24,48 @@ import {
 
 // Mock Data for "Matières"
 const matieresData = [
-    { id: 1, name: "Algorithmique Avancée", code: "CS201", credits: 6, hetd: 45, cm: 15, td: 15, tp: 15, assigned: ["Dr. Sarah Chen"] },
-    { id: 2, name: "Intelligence Artificielle", code: "CS305", credits: 5, hetd: 40, cm: 20, td: 10, tp: 10, assigned: [] },
-    { id: 3, name: "Base de Données Relationnelles", code: "CS210", credits: 4, hetd: 35, cm: 10, td: 10, tp: 15, assigned: ["John Doe"] },
-    { id: 4, name: "Réseaux Informatiques", code: "IT202", credits: 5, hetd: 42, cm: 18, td: 12, tp: 12, assigned: [] },
-    { id: 5, name: "Développement Web", code: "CS105", credits: 4, hetd: 30, cm: 10, td: 5, tp: 15, assigned: ["Ada Lovelace"] },
+    // Licence Management International
+    { id: 1, name: "Management Interculturel", code: "LMI51", credits: 5, hetd: 40, cm: 20, td: 20, tp: 0, assigned: ["Prof. Karim Tazi"] },
+    { id: 2, name: "Géopolitique et Économie Mondiale", code: "LMI52", credits: 4, hetd: 30, cm: 15, td: 15, tp: 0, assigned: [] },
+    { id: 3, name: "Finance Internationale", code: "LMI53", credits: 5, hetd: 45, cm: 25, td: 20, tp: 0, assigned: ["Prof. Nadia Lahlou"] },
+    { id: 4, name: "Marketing International", code: "LMI54", credits: 5, hetd: 40, cm: 20, td: 20, tp: 0, assigned: [] },
+    { id: 5, name: "Supply Chain Globale", code: "LMI55", credits: 5, hetd: 40, cm: 25, td: 15, tp: 0, assigned: ["Dr. Younes Berrada"] },
+    { id: 6, name: "Anglais des Affaires", code: "LMI56", credits: 6, hetd: 45, cm: 15, td: 15, tp: 15, assigned: ["Dr. Amina Chakir"] },
+
+    // Licence Marketing
+    { id: 7, name: "Comportement du Consommateur", code: "LMG51", credits: 5, hetd: 45, cm: 25, td: 20, tp: 0, assigned: ["Prof. Salma Benmansour"] },
+    { id: 8, name: "Marketing Digital et E-commerce", code: "LMG52", credits: 5, hetd: 40, cm: 20, td: 20, tp: 0, assigned: ["Dr. Hassan Alaoui"] },
+    { id: 9, name: "Études de Marché et Analyse de Données", code: "LMG53", credits: 5, hetd: 50, cm: 25, td: 15, tp: 10, assigned: [] },
+    { id: 10, name: "Communication Marketing Intégrée", code: "LMG54", credits: 5, hetd: 40, cm: 20, td: 20, tp: 0, assigned: ["Prof. Salma Benmansour"] },
+    { id: 11, name: "Stratégie de Marque", code: "LMG55", credits: 5, hetd: 40, cm: 20, td: 20, tp: 0, assigned: [] },
+    { id: 12, name: "Droit du Numérique", code: "LMG56", credits: 5, hetd: 35, cm: 20, td: 15, tp: 0, assigned: ["Maître Youssef Idrissi"] },
+
+    // Licence Logistique
+    { id: 13, name: "Logistique d'Achat et Approvisionnement", code: "LLG51", credits: 5, hetd: 45, cm: 25, td: 20, tp: 0, assigned: ["Dr. Younes Berrada"] },
+    { id: 14, name: "Gestion de Production et Qualité", code: "LLG52", credits: 6, hetd: 50, cm: 25, td: 25, tp: 0, assigned: [] },
+    { id: 15, name: "Transport et Logistique Internationale", code: "LLG53", credits: 5, hetd: 40, cm: 20, td: 20, tp: 0, assigned: ["Prof. Omar Bennani"] },
+    { id: 16, name: "Gestion des Stocks et Entrepôts", code: "LLG54", credits: 5, hetd: 45, cm: 25, td: 20, tp: 0, assigned: [] },
+    { id: 17, name: "Systèmes d'Information (ERP)", code: "LLG55", credits: 5, hetd: 40, cm: 15, td: 15, tp: 10, assigned: ["Dr. Hassan Alaoui"] },
+    { id: 18, name: "Droit des Transports", code: "LLG56", credits: 4, hetd: 30, cm: 20, td: 10, tp: 0, assigned: ["Maître Youssef Idrissi"] },
+
+    // Licence Management
+    { id: 19, name: "Contrôle de Gestion", code: "LMN51", credits: 6, hetd: 50, cm: 30, td: 20, tp: 0, assigned: ["Prof. Nadia Lahlou"] },
+    { id: 20, name: "Gestion des Ressources Humaines", code: "LMN52", credits: 5, hetd: 45, cm: 25, td: 20, tp: 0, assigned: ["Dr. Amina Chakir"] },
+    { id: 21, name: "Finance d'Entreprise", code: "LMN53", credits: 5, hetd: 45, cm: 25, td: 20, tp: 0, assigned: ["Prof. Karim Tazi"] },
+    { id: 22, name: "Fiscalité de l'Entreprise", code: "LMN54", credits: 5, hetd: 40, cm: 20, td: 20, tp: 0, assigned: [] },
+    { id: 23, name: "Management Stratégique", code: "LMN55", credits: 5, hetd: 45, cm: 25, td: 20, tp: 0, assigned: ["Prof. Omar Bennani"] },
+    { id: 24, name: "Droit des Affaires", code: "LMN56", credits: 4, hetd: 35, cm: 20, td: 15, tp: 0, assigned: ["Maître Youssef Idrissi"] },
 ];
 
 const mockProfessors = [
-    "Dr. Sarah Chen",
-    "John Doe",
-    "Ada Lovelace",
-    "Alan Turing"
+    "Prof. Karim Tazi",
+    "Prof. Nadia Lahlou",
+    "Dr. Younes Berrada",
+    "Dr. Amina Chakir",
+    "Prof. Salma Benmansour",
+    "Dr. Hassan Alaoui",
+    "Prof. Omar Bennani",
+    "Maître Youssef Idrissi"
 ];
 
 export default function Matieres() {
@@ -64,7 +94,7 @@ export default function Matieres() {
         // Simulate AI checking
         setTimeout(() => {
             setAiChecking(false);
-            if (val === "Dr. Sarah Chen") {
+            if (val === "Prof. Nadia Lahlou") {
                 setAiResult("conflict");
             } else {
                 setAiResult("ok");
